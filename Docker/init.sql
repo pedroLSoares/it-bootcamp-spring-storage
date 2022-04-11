@@ -1,0 +1,2 @@
+CREATE
+DATABASE marketplace_bootcamp_db;
