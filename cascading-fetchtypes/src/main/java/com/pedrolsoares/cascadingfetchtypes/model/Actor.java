@@ -1,5 +1,6 @@
 package com.pedrolsoares.cascadingfetchtypes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -32,11 +32,12 @@ public class Actor {
     @Column
     private BigDecimal rating;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "favorite_movie_id")
     private Movie favoriteMovieId;
 
     @ManyToMany(mappedBy = "actors")
+    @JsonIgnoreProperties(value = "actors")
     private List<Movie> movies;
 
     @CreatedDate

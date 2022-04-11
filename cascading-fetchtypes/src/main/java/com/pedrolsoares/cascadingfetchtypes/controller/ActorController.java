@@ -27,7 +27,27 @@ public class ActorController {
 
 
         return ResponseEntity.created(uri).build();
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody @Valid ActorDTO actorDTO){
+        Actor updated = actorService.updateActor(id, actorDTO);
+
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> remove(@PathVariable Long id){
+        Actor removed = actorService.removeActorById(id);
+
+        return ResponseEntity.ok(removed);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> find(@PathVariable Long id) {
+        Actor found = actorService.findActorById(id);
+
+        return ResponseEntity.ok(found);
     }
 
     @GetMapping

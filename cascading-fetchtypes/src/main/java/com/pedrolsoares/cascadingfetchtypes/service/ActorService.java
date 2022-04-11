@@ -18,15 +18,15 @@ public class ActorService {
     private final ActorRepository actorRepository;
     private final MovieService movieService;
 
-    public Actor createActor(ActorDTO actorDTO){
-        Movie favoriteMovie = actorDTO.getFavoriteMovieId() != null ? movieService.findMovieById(actorDTO.getFavoriteMovieId()) : null;
+    public Actor updateActor(Long id, ActorDTO actorDTO) {
+        Actor actor = buildActor(actorDTO);
+        actor.setId(id);
 
-        Actor actorToSave = new Actor(
-                actorDTO.getFirstName(),
-                actorDTO.getLastName(),
-                actorDTO.getRating(),
-                favoriteMovie
-        );
+        return saveActor(actor);
+    }
+
+    public Actor createActor(ActorDTO actorDTO){
+        Actor actorToSave = buildActor(actorDTO);
 
         return saveActor(actorToSave);
     }
@@ -39,7 +39,7 @@ public class ActorService {
         return actorRepository.findAll();
     }
 
-    public Actor findGenreById(Long id) {
+    public Actor findActorById(Long id) {
         Optional<Actor> optionalActor = actorRepository.findById(id);
 
         if(optionalActor.isEmpty()) {
@@ -49,12 +49,29 @@ public class ActorService {
         return optionalActor.get();
     }
 
-    public Actor removeGenreById(Long id) {
-        Actor actor = findGenreById(id);
+    public Actor removeActorById(Long id) {
+        Actor actor = findActorById(id);
+
+        actor.getMovies().forEach(m -> {
+            m.getActors().remove(actor);
+            movieService.saveMovie(m);
+        });
 
         actorRepository.deleteById(id);
 
         return actor;
+    }
+
+    private Actor buildActor(ActorDTO actorDTO){
+        Movie favoriteMovie = actorDTO.getFavoriteMovieId() != null ? movieService.findMovieById(actorDTO.getFavoriteMovieId()) : null;
+
+        return new Actor(
+                actorDTO.getFirstName(),
+                actorDTO.getLastName(),
+                actorDTO.getRating(),
+                favoriteMovie
+        );
+
     }
 
 }
