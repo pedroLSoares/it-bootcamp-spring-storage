@@ -57,6 +57,7 @@
         <module>cascading-fetchtypes</module>
         <module>jewelry</module>
         <module>qa</module>
+        <module>hql</module>
     </modules>
 
     <build>
