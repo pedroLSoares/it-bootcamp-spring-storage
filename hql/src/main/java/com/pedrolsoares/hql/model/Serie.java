@@ -1,5 +1,6 @@
 package com.pedrolsoares.hql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,11 +31,15 @@ public class Serie {
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 
-    @Column
-    private LocalDateTime releaseDate;
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "serie")
+    private List<Season> seasons;
 
     @Column
-    private LocalDateTime endDate;
+    private Date releaseDate;
+
+    @Column
+    private Date endDate;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,7 +49,7 @@ public class Serie {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    public Serie(String title, Genre genre, LocalDateTime releaseDate, LocalDateTime endDate) {
+    public Serie(String title, Genre genre, Date releaseDate, Date endDate) {
         this.title = title;
         this.genre = genre;
         this.releaseDate = releaseDate;

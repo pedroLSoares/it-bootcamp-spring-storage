@@ -1,5 +1,6 @@
 package com.pedrolsoares.hql.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,12 @@ public class Episode {
     private Integer number;
 
     @Column
-    private LocalDateTime releaseDate;
+    private Date releaseDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "season_id", nullable = false)
+    @JsonBackReference
+    private Season season;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -38,6 +44,7 @@ public class Episode {
             joinColumns = @JoinColumn(name = "episode_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
+    @JsonBackReference
     private List<Actor> actors;
 
     @CreatedDate
@@ -47,4 +54,12 @@ public class Episode {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    public Episode(String title, Integer number, Date releaseDate, Season season, List<Actor> actors) {
+        this.title = title;
+        this.number = number;
+        this.releaseDate = releaseDate;
+        this.season = season;
+        this.actors = actors;
+    }
 }
