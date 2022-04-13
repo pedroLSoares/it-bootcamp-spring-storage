@@ -65,6 +65,7 @@
         <module>qa</module>
         <module>hql</module>
         <module>ElasticSearchArticles</module>
+        <module>ElasticsearchProducts</module>
     </modules>
 
     <build>
